@@ -33,12 +33,12 @@ struct Knight: ChessPiece {
             var possiblePositions: [ChessSquare] = []
             for row in oneStepMoves {
                 for column in twoStepMoves {
-                    possiblePositions.append(ChessSquare(row: position.row + row, column: position.column + column))
+                    possiblePositions.append(ChessSquare(x: position.x + row, y: position.y + column))
                 }
             }
             for row in twoStepMoves {
                 for column in oneStepMoves {
-                    possiblePositions.append(ChessSquare(row: position.row + row, column: position.column + column))
+                    possiblePositions.append(ChessSquare(x: position.x + row, y: position.y + column))
                 }
             }
             

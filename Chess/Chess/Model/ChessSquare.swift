@@ -9,6 +9,6 @@
 import Foundation
 
 struct ChessSquare: Equatable, Hashable {
-    let row: Int
-    let column: Int
+    let x: Int
+    let y: Int
 }

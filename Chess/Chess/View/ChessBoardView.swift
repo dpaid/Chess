@@ -10,7 +10,19 @@ import UIKit
 
 class ChessBoardView: UIView {
     static let margin: CGFloat = 30
-    let chessBoard: ChessBoard
+    private let chessBoard: ChessBoard
+    private var startSquare: ChessSquare? {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    private var endSquare: ChessSquare? {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    private lazy var squareSize: CGFloat = (bounds.width - ChessBoardView.margin) / sqrt(CGFloat(chessBoard.squares.count))
+    
     
     init(chessBoard: ChessBoard) {
         self.chessBoard = chessBoard
@@ -24,35 +36,47 @@ class ChessBoardView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
-        let squareSize = (bounds.width - ChessBoardView.margin) / sqrt(CGFloat(chessBoard.squares.count))
-        drawSquares(squareSize: squareSize)
-        drawLetters(squareSize: squareSize)
-        drawNumbers(squareSize: squareSize)
+        drawSquares()
+        drawLetters()
+        drawNumbers()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
-        let location = touch.location(in: self)
-        print(location)
+        let point = touch.location(in: self)
+        print(point)
+        
+        guard let square = chessBoard.translate(point: point, in: self) else { return }
+    
+        if startSquare == nil {
+            startSquare = square
+        } else if endSquare == nil {
+            endSquare = square
+            // TODO: start solving
+        } else {
+            startSquare = nil
+            endSquare = nil
+        }
     }
 }
 
 extension ChessBoardView {
-    private func drawSquares(squareSize: CGFloat) {
+    private func drawSquares() {
         chessBoard.squares.forEach { square in
-            if (square.row + square.column) % 2 == 0 {
-                let path = UIBezierPath(rect: CGRect(x: (CGFloat(square.row) * squareSize + ChessBoardView.margin),
-                                                     y: CGFloat(square.column) * squareSize,
-                                                     width: squareSize,
-                                                     height: squareSize))
+            var color: UIColor = (square.x + square.y) % 2 == 0 ? .black : .white
+            if square == startSquare { color = .green }
+            if square == endSquare { color = .red }
+            let path = UIBezierPath(rect: CGRect(x: (CGFloat(square.x) * squareSize + ChessBoardView.margin),
+                                                 y: CGFloat(chessBoard.size - 1 - square.y) * squareSize,
+                                                 width: squareSize,
+                                                 height: squareSize))
             
-                UIColor.black.setFill()
-                path.fill()
-            }
+            color.setFill()
+            path.fill()
         }
     }
     
-    private func drawLetters(squareSize: CGFloat) {
+    private func drawLetters() {
         let allLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W"]
         let letters = allLetters.prefix(chessBoard.size)
         let attributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15),
@@ -70,7 +94,7 @@ extension ChessBoardView {
         }
     }
     
-    private func drawNumbers(squareSize: CGFloat) {
+    private func drawNumbers() {
         let attributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15),
                           NSAttributedString.Key.foregroundColor : UIColor.black]
         let numberSize = 15
