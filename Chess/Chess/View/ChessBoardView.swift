@@ -11,12 +11,7 @@ import UIKit
 class ChessBoardView: UIView {
     static let margin: CGFloat = 30
     private let chessBoard: ChessBoard
-    private var startSquare: ChessSquare? {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    private var endSquare: ChessSquare? {
+    private var state: ChessBoardState = .initial {
         didSet {
             setNeedsDisplay()
         }
@@ -47,25 +42,14 @@ class ChessBoardView: UIView {
         print(point)
         
         guard let square = chessBoard.translate(point: point, in: self) else { return }
-    
-        if startSquare == nil {
-            startSquare = square
-        } else if endSquare == nil {
-            endSquare = square
-            // TODO: start solving
-        } else {
-            startSquare = nil
-            endSquare = nil
-        }
+        state.moveToNextState(square: square)
     }
 }
 
 extension ChessBoardView {
     private func drawSquares() {
         chessBoard.squares.forEach { square in
-            var color: UIColor = (square.x + square.y) % 2 == 0 ? .black : .white
-            if square == startSquare { color = .green }
-            if square == endSquare { color = .red }
+            let color = defineColor(square: square)
             let path = UIBezierPath(rect: CGRect(x: (CGFloat(square.x) * squareSize + ChessBoardView.margin),
                                                  y: CGFloat(chessBoard.size - 1 - square.y) * squareSize,
                                                  width: squareSize,
@@ -73,6 +57,17 @@ extension ChessBoardView {
             
             color.setFill()
             path.fill()
+        }
+    }
+    
+    private func defineColor(square: ChessSquare) -> UIColor {
+        switch state {
+        case .initial:
+            return (square.x + square.y) % 2 == 0 ? .black : .white
+        case .incomplete(let start):
+            return square == start ? .green : ((square.x + square.y) % 2 == 0 ? .black : .white)
+        case .complete(let start, let end):
+            return square == start ? .green : (square == end) ? .red : ((square.x + square.y) % 2 == 0 ? .black : .white)
         }
     }
     

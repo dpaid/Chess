@@ -17,6 +17,7 @@
 		21A7767523E33BFB00798390 /* ChessBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A7767423E33BFB00798390 /* ChessBoard.swift */; };
 		21A7767723E33C1900798390 /* ChessPiece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A7767623E33C1900798390 /* ChessPiece.swift */; };
 		21A7767A23E33C6100798390 /* ChessBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A7767923E33C6100798390 /* ChessBoardView.swift */; };
+		21A7767C23E3670F00798390 /* ChessBoardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A7767B23E3670F00798390 /* ChessBoardState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		21A7767423E33BFB00798390 /* ChessBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessBoard.swift; sourceTree = "<group>"; };
 		21A7767623E33C1900798390 /* ChessPiece.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessPiece.swift; sourceTree = "<group>"; };
 		21A7767923E33C6100798390 /* ChessBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessBoardView.swift; sourceTree = "<group>"; };
+		21A7767B23E3670F00798390 /* ChessBoardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChessBoardState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				21A7767123E33BCA00798390 /* ChessSquare.swift */,
 				21A7767423E33BFB00798390 /* ChessBoard.swift */,
 				21A7767623E33C1900798390 /* ChessPiece.swift */,
+				21A7767B23E3670F00798390 /* ChessBoardState.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 				21A7765023E336DE00798390 /* AppDelegate.swift in Sources */,
 				21A7765223E336DE00798390 /* SceneDelegate.swift in Sources */,
 				21A7767223E33BCA00798390 /* ChessSquare.swift in Sources */,
+				21A7767C23E3670F00798390 /* ChessBoardState.swift in Sources */,
 				21A7767A23E33C6100798390 /* ChessBoardView.swift in Sources */,
 				21A7767523E33BFB00798390 /* ChessBoard.swift in Sources */,
 				21A7767723E33C1900798390 /* ChessPiece.swift in Sources */,
