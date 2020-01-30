@@ -10,12 +10,7 @@ import UIKit
 
 class ChessBoardView: UIView {
     static let margin: CGFloat = 30
-    private let chessBoard: ChessBoard
-    private var state: ChessBoardState = .initial {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
+    private var chessBoard: ChessBoard
     private lazy var squareSize: CGFloat = (bounds.width - ChessBoardView.margin) / sqrt(CGFloat(chessBoard.squares.count))
     
     
@@ -39,17 +34,17 @@ class ChessBoardView: UIView {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let point = touch.location(in: self)
-        print(point)
         
         guard let square = chessBoard.translate(point: point, in: self) else { return }
-        state.moveToNextState(square: square)
+        chessBoard.state.moveToNextState(square: square)
+        setNeedsDisplay()
     }
 }
 
 extension ChessBoardView {
     private func drawSquares() {
         chessBoard.squares.forEach { square in
-            let color = defineColor(square: square)
+            let color = chessBoard.defineColor(square: square)
             let path = UIBezierPath(rect: CGRect(x: (CGFloat(square.x) * squareSize + ChessBoardView.margin),
                                                  y: CGFloat(chessBoard.size - 1 - square.y) * squareSize,
                                                  width: squareSize,
@@ -57,17 +52,6 @@ extension ChessBoardView {
             
             color.setFill()
             path.fill()
-        }
-    }
-    
-    private func defineColor(square: ChessSquare) -> UIColor {
-        switch state {
-        case .initial:
-            return (square.x + square.y) % 2 == 0 ? .black : .white
-        case .incomplete(let start):
-            return square == start ? .green : ((square.x + square.y) % 2 == 0 ? .black : .white)
-        case .complete(let start, let end):
-            return square == start ? .green : (square == end) ? .red : ((square.x + square.y) % 2 == 0 ? .black : .white)
         }
     }
     

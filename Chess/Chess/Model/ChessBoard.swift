@@ -9,14 +9,18 @@
 import Foundation
 import UIKit
 
+protocol ChessBoardDelegate: class {
+    func didMove(to state: ChessBoardState)
+}
+
 struct ChessBoard {
     let size: Int
-    var squares: [ChessSquare]
+    var state: ChessBoardState = .initial
+    var squares: [ChessSquare] = []
+    weak var delegate: ChessBoardDelegate?
     
     init(size: Int) {
         self.size = size
-        self.squares = []
-        
         for x in 0..<size {
             for y in 0..<size {
                 self.squares.append(ChessSquare(x: x, y: y))
@@ -46,5 +50,20 @@ struct ChessBoard {
         
         print("x: \(x), y: \(y), squareSize: \(squareSize)")
         return ChessSquare(x: x, y: y)
+    }
+    
+    mutating func moveToNextState(square: ChessSquare) {
+        state.moveToNextState(square: square)
+    }
+    
+    func defineColor(square: ChessSquare) -> UIColor {
+        switch state {
+        case .initial:
+            return (square.x + square.y) % 2 == 0 ? .black : .white
+        case .incomplete(let start):
+            return square == start ? .green : ((square.x + square.y) % 2 == 0 ? .black : .white)
+        case .complete(let start, let end):
+            return square == start ? .green : (square == end) ? .red : ((square.x + square.y) % 2 == 0 ? .black : .white)
+        }
     }
 }
