@@ -16,7 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         guard #available(iOS 13.0, *) else {
-            let viewController = ViewController(nibName: nil, bundle: nil)
+            let board = ChessBoard(size: 8)
+            let viewController = ViewController(board: board)
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.prefersLargeTitles = true
             
