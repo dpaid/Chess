@@ -11,8 +11,8 @@ import UIKit
 class ViewController: UIViewController {
     private var boardView: ChessBoardView
     
-    init(board: ChessBoard) {
-        self.boardView = ChessBoardView(chessBoard: board)
+    init() {
+        self.boardView = ChessBoardView()
         super.init(nibName: nil, bundle: nil)
         
         title = "Say Cheesse"

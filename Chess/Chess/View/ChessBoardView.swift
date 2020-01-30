@@ -14,8 +14,8 @@ class ChessBoardView: UIView {
     private lazy var squareSize: CGFloat = (bounds.width - ChessBoardView.margin) / sqrt(CGFloat(chessBoard.squares.count))
     
     
-    init(chessBoard: ChessBoard) {
-        self.chessBoard = chessBoard
+    init() {
+        self.chessBoard = ChessBoard(size: 8)
         super.init(frame: .zero)
         
         backgroundColor = .white
