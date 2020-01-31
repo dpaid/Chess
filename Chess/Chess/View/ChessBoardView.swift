@@ -51,7 +51,7 @@ class ChessBoardView: UIView {
 extension ChessBoardView {
     private func drawSquares() {
         chessBoard.squares.forEach { square in
-            let color = chessBoard.defineColor(square: square)
+            let color = chessBoard.color(for: square)
             let path = UIBezierPath(rect: CGRect(x: (CGFloat(square.x) * squareSize + ChessBoardView.margin),
                                                  y: CGFloat(chessBoard.size - 1 - square.y) * squareSize,
                                                  width: squareSize,

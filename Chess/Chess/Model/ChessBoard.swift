@@ -52,7 +52,7 @@ struct ChessBoard {
         state.moveToNextState(square: square)
     }
     
-    func defineColor(square: ChessSquare) -> UIColor {
+    func color(`for` square: ChessSquare) -> UIColor {
         switch state {
         case .initial:
             return (square.x + square.y) % 2 == 0 ? .black : .white
