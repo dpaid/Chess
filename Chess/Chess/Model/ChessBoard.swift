@@ -9,15 +9,11 @@
 import Foundation
 import UIKit
 
-protocol ChessBoardDelegate: class {
-    func didMove(to state: ChessBoardState)
-}
-
 struct ChessBoard {
+    static let validSizes = 6...16
     let size: Int
     var state: ChessBoardState = .initial
     var squares: [ChessSquare] = []
-    weak var delegate: ChessBoardDelegate?
     
     init(size: Int) {
         self.size = size
