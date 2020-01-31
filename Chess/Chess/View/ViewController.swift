@@ -9,10 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController {
-    private var boardView: ChessBoardView
+    private var chessBoardView: ChessBoardView
     
     init() {
-        self.boardView = ChessBoardView()
+        self.chessBoardView = ChessBoardView()
         super.init(nibName: nil, bundle: nil)
         
         title = "Say Cheesse"
@@ -29,7 +29,7 @@ class ViewController: UIViewController {
         let sizesAlertController = UIAlertController(title: "Pick board size", message: nil, preferredStyle: .alert)
         for size in ChessBoard.validSizes {
             let action = UIAlertAction(title: "\(size) x \(size)", style: .default) { (action) in
-                print(action.title)
+                self.chessBoardView.resize(size: size)
             }
             sizesAlertController.addAction(action)
         }
@@ -41,13 +41,13 @@ class ViewController: UIViewController {
 
     
     private func setupBoardView() {
-        boardView.contentMode = .redraw
-        boardView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(boardView)
-        boardView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
-        boardView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        boardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        boardView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        chessBoardView.contentMode = .redraw
+        chessBoardView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(chessBoardView)
+        chessBoardView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        chessBoardView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        chessBoardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        chessBoardView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
     }
 }
 

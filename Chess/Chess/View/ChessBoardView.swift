@@ -11,7 +11,9 @@ import UIKit
 class ChessBoardView: UIView {
     static let margin: CGFloat = 30
     private var chessBoard: ChessBoard
-    private lazy var squareSize: CGFloat = (bounds.width - ChessBoardView.margin) / sqrt(CGFloat(chessBoard.squares.count))
+    private var squareSize: CGFloat {
+        return (bounds.width - ChessBoardView.margin) / sqrt(CGFloat(chessBoard.squares.count))
+    }
     
     
     init() {
@@ -37,6 +39,11 @@ class ChessBoardView: UIView {
         
         guard let square = chessBoard.translate(point: point, in: self) else { return }
         chessBoard.state.moveToNextState(square: square)
+        setNeedsDisplay()
+    }
+    
+    func resize(size: Int) {
+        self.chessBoard = ChessBoard(size: size)
         setNeedsDisplay()
     }
 }
