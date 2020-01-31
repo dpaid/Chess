@@ -14,18 +14,17 @@ enum ChessColor {
 }
 
 protocol ChessPiece {
-    var color: ChessColor { get set }
-    var initialPosition: ChessSquare { get set }
+    var color: ChessColor { get }
+    var initialPosition: ChessSquare { get }
     var position: ChessSquare { get set }
     var possiblePositions: [ChessSquare] { get }
-    mutating func move(to: ChessSquare)
 }
 
 struct Knight: ChessPiece {
-    var color: ChessColor
-    var initialPosition: ChessSquare
+    let color: ChessColor
+    let initialPosition: ChessSquare
     var position: ChessSquare
-     var possiblePositions: [ChessSquare] {
+    var possiblePositions: [ChessSquare] {
         get {
             let oneStepMoves = [1, -1]
             let twoStepMoves = [2, -2]

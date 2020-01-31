@@ -11,8 +11,8 @@ import UIKit
 
 struct ChessBoard {
     static let validSizes = 6...16
-    let size: Int
     private var state: ChessBoardState = .initial
+    let size: Int
     var squares: [ChessSquare] = []
     
     init(size: Int) {
