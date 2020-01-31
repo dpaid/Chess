@@ -38,7 +38,7 @@ class ChessBoardView: UIView {
         let point = touch.location(in: self)
         
         guard let square = chessBoard.translate(point: point, in: self) else { return }
-        chessBoard.state.moveToNextState(square: square)
+        chessBoard.moveToNextState(square: square)
         setNeedsDisplay()
     }
     
