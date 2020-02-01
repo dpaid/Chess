@@ -82,7 +82,7 @@ struct ChessBoard {
         case .initial:
             return (square.x + square.y) % 2 == 0 ? UIColor.systemBackground : UIColor.label
         case .incomplete(let start):
-            return square == start ? .green : ((square.x + square.y) % 2 == 0 ? .black : .white)
+            return square == start ? .green : ((square.x + square.y) % 2 == 0 ? UIColor.systemBackground : UIColor.label)
         case .complete(let start, let end):
             return square == start ? .green : (square == end) ? .red : ((square.x + square.y) % 2 == 0 ? UIColor.systemBackground : UIColor.label)
         }
