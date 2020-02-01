@@ -114,7 +114,7 @@ extension ChessBoard {
         return solutions
     }
     
-    private func validPositions(piece: ChessPiece) -> Set<ChessSquare> {
+    func validPositions(piece: ChessPiece) -> Set<ChessSquare> {
         var validPositions: Set<ChessSquare> = []
         for position in piece.possiblePositions {
             guard position.x >= 0 && position.x < size,

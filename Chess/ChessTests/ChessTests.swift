@@ -14,33 +14,33 @@ class ChessTests: XCTestCase {
     func testValidPositions() {
         // Given
         let chessBoard = ChessBoard(size: 8)
-        let piece = Knight(color: .black, initialPosition: ChessSquare(row: 0, column: 1), position: ChessSquare(row: 0, column: 1))
+        let piece = Knight(color: .black, initialPosition: ChessSquare(x: 0, y: 1), position: ChessSquare(x: 0, y: 1))
         
         // When
         let validPositions = chessBoard.validPositions(piece: piece)
         
         // Then
         XCTAssertEqual(chessBoard.validPositions(piece: piece).count, 3)
-        XCTAssert(validPositions.contains(ChessSquare(row: 2, column: 0)))
-        XCTAssert(validPositions.contains(ChessSquare(row: 2, column: 2)))
-        XCTAssert(validPositions.contains(ChessSquare(row: 1, column: 3)))
+        XCTAssert(validPositions.contains(ChessSquare(x: 2, y: 0)))
+        XCTAssert(validPositions.contains(ChessSquare(x: 2, y: 2)))
+        XCTAssert(validPositions.contains(ChessSquare(x: 1, y: 3)))
         
         // Given
-        let piece2 = Knight(color: .black, initialPosition: ChessSquare(row: 0, column: 1), position: ChessSquare(row: 3, column: 3))
+        let piece2 = Knight(color: .black, initialPosition: ChessSquare(x: 0, y: 1), position: ChessSquare(x: 3, y: 3))
            
         // When
         let validPositions2 = chessBoard.validPositions(piece: piece2)
            
         // Then
         XCTAssertEqual(chessBoard.validPositions(piece: piece2).count, 8)
-        XCTAssert(validPositions2.contains(ChessSquare(row: 4, column: 5)))
-        XCTAssert(validPositions2.contains(ChessSquare(row: 4, column: 1)))
-        XCTAssert(validPositions2.contains(ChessSquare(row: 2, column: 5)))
-        XCTAssert(validPositions2.contains(ChessSquare(row: 2, column: 1)))
-        XCTAssert(validPositions2.contains(ChessSquare(row: 5, column: 2)))
-        XCTAssert(validPositions2.contains(ChessSquare(row: 5, column: 4)))
-        XCTAssert(validPositions2.contains(ChessSquare(row: 1, column: 2)))
-        XCTAssert(validPositions2.contains(ChessSquare(row: 1, column: 4)))
+        XCTAssert(validPositions2.contains(ChessSquare(x: 4, y: 5)))
+        XCTAssert(validPositions2.contains(ChessSquare(x: 4, y: 1)))
+        XCTAssert(validPositions2.contains(ChessSquare(x: 2, y: 5)))
+        XCTAssert(validPositions2.contains(ChessSquare(x: 2, y: 1)))
+        XCTAssert(validPositions2.contains(ChessSquare(x: 5, y: 2)))
+        XCTAssert(validPositions2.contains(ChessSquare(x: 5, y: 4)))
+        XCTAssert(validPositions2.contains(ChessSquare(x: 1, y: 2)))
+        XCTAssert(validPositions2.contains(ChessSquare(x: 1, y: 4)))
     }
 
 }
