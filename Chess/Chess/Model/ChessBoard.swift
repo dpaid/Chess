@@ -9,11 +9,16 @@
 import Foundation
 import UIKit
 
+protocol ChessBoardDelegate: class {
+    func didFind(paths: [Stack<ChessSquare>])
+}
+
 struct ChessBoard {
-    static let validSizes = 4...16
+    static let validSizes = 6...16
     private var state: ChessBoardState = .initial
     let size: Int
     var squares: [ChessSquare] = []
+    weak var delegate: ChessBoardDelegate?
     
     init(size: Int) {
         self.size = size
@@ -44,7 +49,8 @@ struct ChessBoard {
             var knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)
             var visitedStack = Stack<ChessSquare>()
             let solutions = depthFirstSearch(piece: &knight, visitedStack: &visitedStack, start: start, end: end)
-            print(solutions)
+            let sortedSolutions = solutions.sorted { $0.description.count < $1.description.count }
+            delegate?.didFind(paths: sortedSolutions)
         case .initial, .incomplete:
             break
         }
@@ -66,18 +72,21 @@ extension ChessBoard {
     private func depthFirstSearch(piece: inout ChessPiece,
                           visitedStack: inout Stack<ChessSquare>,
                           start: ChessSquare,
-                          end: ChessSquare) -> [Stack<ChessSquare>] {
+                          end: ChessSquare,
+                          cutoff: Int? = 3) -> [Stack<ChessSquare>] {
         var solutions: [Stack<ChessSquare>] = []
         
         visitedStack.push(start)
         for position in validPositions(piece: piece) {
+            guard cutoff == nil || cutoff! > 0 else { return solutions }
+            
             guard !visitedStack.contains(element: position) else { continue }
             piece.move(to: position)
             if position == end {
                 visitedStack.push(position)
                 solutions.append(visitedStack)
             } else {
-                solutions += depthFirstSearch(piece: &piece, visitedStack: &visitedStack, start: position, end: end)
+                solutions += depthFirstSearch(piece: &piece, visitedStack: &visitedStack, start: position, end: end, cutoff: cutoff == nil ? cutoff : cutoff! - 1)
             }
             _ = visitedStack.pop()
         }
