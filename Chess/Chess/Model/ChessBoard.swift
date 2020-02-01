@@ -84,7 +84,7 @@ struct ChessBoard {
         case .incomplete(let start):
             return square == start ? .green : ((square.x + square.y) % 2 == 0 ? .black : .white)
         case .complete(let start, let end):
-            return square == start ? .green : (square == end) ? .red : ((square.x + square.y) % 2 == 0 ? .black : .white)
+            return square == start ? .green : (square == end) ? .red : ((square.x + square.y) % 2 == 0 ? UIColor.systemBackground : UIColor.label)
         }
     }
 }
@@ -94,7 +94,7 @@ extension ChessBoard {
                           visitedStack: inout Stack<ChessSquare>,
                           start: ChessSquare,
                           end: ChessSquare,
-                          cutoff: Int? = 3) -> [Stack<ChessSquare>] {
+                          cutoff: Int? = nil) -> [Stack<ChessSquare>] {
         var solutions: [Stack<ChessSquare>] = []
         
         visitedStack.push(start)
