@@ -13,7 +13,7 @@ enum ChessBoardState {
     case incomplete(start: ChessSquare)
     case complete(start: ChessSquare, end: ChessSquare)
     
-    mutating func moveToNextState(square: ChessSquare) {
+    mutating func moveToNextState(square: ChessSquare) -> ChessBoardState {
         switch (self) {
         case .initial:
             self = .incomplete(start: square)
@@ -26,5 +26,6 @@ enum ChessBoardState {
         case (.complete):
             self = .initial
         }
+        return self
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		218C562423E576A90081C7FC /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218C562323E576A90081C7FC /* Stack.swift */; };
 		21A7765023E336DE00798390 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A7764F23E336DE00798390 /* AppDelegate.swift */; };
 		21A7765223E336DE00798390 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A7765123E336DE00798390 /* SceneDelegate.swift */; };
 		21A7765423E336DE00798390 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A7765323E336DE00798390 /* ViewController.swift */; };
@@ -31,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		218C562323E576A90081C7FC /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		21A7764C23E336DD00798390 /* Chess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21A7764F23E336DE00798390 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		21A7765123E336DE00798390 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				21A7767423E33BFB00798390 /* ChessBoard.swift */,
 				21A7767623E33C1900798390 /* ChessPiece.swift */,
 				21A7767B23E3670F00798390 /* ChessBoardState.swift */,
+				218C562323E576A90081C7FC /* Stack.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				21A7765423E336DE00798390 /* ViewController.swift in Sources */,
+				218C562423E576A90081C7FC /* Stack.swift in Sources */,
 				21A7765023E336DE00798390 /* AppDelegate.swift in Sources */,
 				21A7765223E336DE00798390 /* SceneDelegate.swift in Sources */,
 				21A7767223E33BCA00798390 /* ChessSquare.swift in Sources */,

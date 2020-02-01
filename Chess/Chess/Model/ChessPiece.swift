@@ -18,6 +18,7 @@ protocol ChessPiece {
     var initialPosition: ChessSquare { get }
     var position: ChessSquare { get set }
     var possiblePositions: [ChessSquare] { get }
+    mutating func move(to position: ChessSquare)
 }
 
 struct Knight: ChessPiece {
@@ -45,7 +46,7 @@ struct Knight: ChessPiece {
         }
     }
     
-    mutating func move(to square: ChessSquare) {
-        position = square
+    mutating func move(to position: ChessSquare) {
+        self.position = position
     }
 }

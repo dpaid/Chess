@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 struct ChessBoard {
-    static let validSizes = 6...16
+    static let validSizes = 4...16
     private var state: ChessBoardState = .initial
     let size: Int
     var squares: [ChessSquare] = []
@@ -24,16 +24,6 @@ struct ChessBoard {
         }
     }
     
-    func validPositions(piece: ChessPiece) -> Set<ChessSquare> {
-        var validPositions: Set<ChessSquare> = []
-        for position in piece.possiblePositions {
-            guard position.x >= 0 && position.x < size,
-                position.y >= 0 && position.y < size else { continue }
-            validPositions.insert(position)
-        }
-        return validPositions
-    }
-    
     func translate(point: CGPoint, `in` view: ChessBoardView) -> ChessSquare? {
         guard point.x > ChessBoardView.margin,
             point.x < view.bounds.width,
@@ -44,12 +34,20 @@ struct ChessBoard {
         let x = Int((point.x - ChessBoardView.margin) / squareSize)
         let y = Int((view.bounds.height - ChessBoardView.margin - point.y) / squareSize)
         
-        print("x: \(x), y: \(y), squareSize: \(squareSize)")
         return ChessSquare(x: x, y: y)
     }
     
     mutating func moveToNextState(square: ChessSquare) {
-        state.moveToNextState(square: square)
+        let newState = state.moveToNextState(square: square)
+        switch newState {
+        case .complete(let start, let end):
+            var knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)
+            var visitedStack = Stack<ChessSquare>()
+            let solutions = depthFirstSearch(piece: &knight, visitedStack: &visitedStack, start: start, end: end)
+            print(solutions)
+        case .initial, .incomplete:
+            break
+        }
     }
     
     func color(`for` square: ChessSquare) -> UIColor {
@@ -61,5 +59,38 @@ struct ChessBoard {
         case .complete(let start, let end):
             return square == start ? .green : (square == end) ? .red : ((square.x + square.y) % 2 == 0 ? .black : .white)
         }
+    }
+}
+
+extension ChessBoard {
+    private func depthFirstSearch(piece: inout ChessPiece,
+                          visitedStack: inout Stack<ChessSquare>,
+                          start: ChessSquare,
+                          end: ChessSquare) -> [Stack<ChessSquare>] {
+        var solutions: [Stack<ChessSquare>] = []
+        
+        visitedStack.push(start)
+        for position in validPositions(piece: piece) {
+            guard !visitedStack.contains(element: position) else { continue }
+            piece.move(to: position)
+            if position == end {
+                visitedStack.push(position)
+                solutions.append(visitedStack)
+            } else {
+                solutions += depthFirstSearch(piece: &piece, visitedStack: &visitedStack, start: position, end: end)
+            }
+            _ = visitedStack.pop()
+        }
+        return solutions
+    }
+    
+    private func validPositions(piece: ChessPiece) -> Set<ChessSquare> {
+        var validPositions: Set<ChessSquare> = []
+        for position in piece.possiblePositions {
+            guard position.x >= 0 && position.x < size,
+                position.y >= 0 && position.y < size else { continue }
+            validPositions.insert(position)
+        }
+        return validPositions
     }
 }
