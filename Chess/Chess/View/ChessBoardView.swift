@@ -8,18 +8,23 @@
 
 import UIKit
 
+protocol ChessBoardViewDelegate: class {
+    func didFind(paths: [Stack<ChessSquare>])
+}
+
 class ChessBoardView: UIView {
     static let margin: CGFloat = 30
     private var chessBoard: ChessBoard
     private var squareSize: CGFloat {
         return (bounds.width - ChessBoardView.margin) / sqrt(CGFloat(chessBoard.squares.count))
     }
-    
+    weak var delegate: ChessBoardViewDelegate?
     
     init() {
         self.chessBoard = ChessBoard(size: 8)
         super.init(frame: .zero)
         
+        self.chessBoard.delegate = self
         backgroundColor = .white
     }
     
@@ -44,8 +49,12 @@ class ChessBoardView: UIView {
     
     func resize(size: Int) {
         self.chessBoard = ChessBoard(size: size)
+        self.chessBoard.delegate = self
+        delegate?.didFind(paths: [])
         setNeedsDisplay()
     }
+    
+    
 }
 
 extension ChessBoardView {
@@ -94,5 +103,11 @@ extension ChessBoardView {
                              attributes: attributes,
                              context: nil)
         }
+    }
+}
+
+extension ChessBoardView: ChessBoardDelegate {
+    func didFind(paths: [Stack<ChessSquare>]) {
+        delegate?.didFind(paths: paths)
     }
 }

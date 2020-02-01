@@ -44,10 +44,9 @@ struct Stack<T: Hashable & CustomStringConvertible> {
 
 extension Stack: CustomStringConvertible {
   var description: String {
-    let bottomSpace = "\n\n"
     let stackElements = array.reduce("") { (res, element) -> String in
         return res == "" ? element.description : res + " - " + element.description
     }
-    return stackElements + bottomSpace
+    return stackElements
   }
 }
