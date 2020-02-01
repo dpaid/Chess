@@ -16,6 +16,12 @@ class ViewController: UIViewController {
             tableView.reloadData()
         }
     }
+    private lazy var spinner: UIActivityIndicatorView = {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.color = .darkGray
+        spinner.hidesWhenStopped = true
+        return spinner
+    }()
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -25,6 +31,10 @@ class ViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Resize", style: .plain, target: self, action: #selector(didPressResize(_:)))
         setupBoardView()
         setupTableView()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
     
     required init?(coder: NSCoder) {
@@ -58,8 +68,8 @@ class ViewController: UIViewController {
     }
     
     private func setupTableView() {
+        tableView.tableHeaderView = spinner
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: String(describing: UITableViewCell.self))
-        tableView.tableHeaderView = UIActivityIndicatorView(style: .large)
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
@@ -71,15 +81,21 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: ChessBoardViewDelegate {
+    func didStartFindingPaths() {
+        spinner.startAnimating()
+    }
+    
     func didFind(paths: [Stack<ChessSquare>]) {
         self.paths = paths
+        spinner.stopAnimating()
         
         if paths.isEmpty {
             presentAlert(title: "No path found", message: "If you're lost, try increasing the cutoff for DFS", actions: [UIAlertAction(title: "OK", style: .cancel, handler: nil)])
         }
     }
     
-    func clearPaths() {
+    func shouldClearPaths() {
+        spinner.stopAnimating()
         self.paths = []
     }
 }

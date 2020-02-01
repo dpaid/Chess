@@ -10,13 +10,15 @@ import Foundation
 import UIKit
 
 protocol ChessBoardDelegate: class {
+    func didStartFindingPaths()
     func didFind(paths: [Stack<ChessSquare>])
-    func clearPaths()
+    func shouldClearPaths()
 }
 
 struct ChessBoard {
     static let validSizes = 6...16
     private var state: ChessBoardState = .initial
+    private var findPathsTask: DispatchWorkItem?
     let size: Int
     var squares: [ChessSquare] = []
     weak var delegate: ChessBoardDelegate?
@@ -44,19 +46,35 @@ struct ChessBoard {
     }
     
     mutating func moveToNextState(square: ChessSquare) {
+        delegate?.shouldClearPaths()
+        findPathsTask?.cancel()
         let newState = state.moveToNextState(square: square)
         switch newState {
         case .initial:
-            delegate?.clearPaths()
+            delegate?.shouldClearPaths()
         case .incomplete:
             break
         case .complete(let start, let end):
+            self.delegate?.didStartFindingPaths()
+            startFindingPaths(start: start, end: end)
+        }
+    }
+    
+    private mutating func startFindingPaths(start: ChessSquare, end: ChessSquare) {
+        var task: DispatchWorkItem?
+        task = DispatchWorkItem { [self] in
             var knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)
             var visitedStack = Stack<ChessSquare>()
-            let solutions = depthFirstSearch(piece: &knight, visitedStack: &visitedStack, start: start, end: end)
+            let solutions = self.depthFirstSearch(piece: &knight, visitedStack: &visitedStack, start: start, end: end)
             let sortedSolutions = solutions.sorted { $0.description.count < $1.description.count }
-            delegate?.didFind(paths: sortedSolutions)
+            if !(task?.isCancelled ?? false) {
+                DispatchQueue.main.async {
+                    self.delegate?.didFind(paths: sortedSolutions)
+                }
+            }
         }
+        self.findPathsTask = task
+        DispatchQueue.global(qos: .background).async(execute: self.findPathsTask!)
     }
     
     func color(`for` square: ChessSquare) -> UIColor {
