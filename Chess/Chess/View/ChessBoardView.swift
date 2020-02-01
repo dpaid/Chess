@@ -25,9 +25,8 @@ class ChessBoardView: UIView {
     init() {
         self.chessBoard = ChessBoard(size: 8)
         super.init(frame: .zero)
-        
+        backgroundColor = UIColor.systemBackground
         self.chessBoard.delegate = self
-        backgroundColor = .white
     }
     
     required init?(coder: NSCoder) {
@@ -75,7 +74,7 @@ extension ChessBoardView {
         let allLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W"]
         let letters = allLetters.prefix(chessBoard.size)
         let attributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15),
-                          NSAttributedString.Key.foregroundColor : UIColor.black]
+                          NSAttributedString.Key.foregroundColor : UIColor.label]
         let charSize = 15
         
         for (index, letter) in letters.enumerated() {
@@ -91,7 +90,7 @@ extension ChessBoardView {
     
     private func drawNumbers() {
         let attributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15),
-                          NSAttributedString.Key.foregroundColor : UIColor.black]
+                          NSAttributedString.Key.foregroundColor : UIColor.label]
         let numberSize = 15
         
         for number in 1...chessBoard.size {

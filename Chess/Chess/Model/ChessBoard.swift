@@ -80,7 +80,7 @@ struct ChessBoard {
     func color(`for` square: ChessSquare) -> UIColor {
         switch state {
         case .initial:
-            return (square.x + square.y) % 2 == 0 ? .black : .white
+            return (square.x + square.y) % 2 == 0 ? UIColor.systemBackground : UIColor.label
         case .incomplete(let start):
             return square == start ? .green : ((square.x + square.y) % 2 == 0 ? .black : .white)
         case .complete(let start, let end):

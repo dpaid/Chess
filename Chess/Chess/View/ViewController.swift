@@ -27,8 +27,8 @@ class ViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         
         title = "Say Cheesse"
-        view.backgroundColor = .white
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Resize", style: .plain, target: self, action: #selector(didPressResize(_:)))
+        view.backgroundColor = UIColor.systemBackground
         setupBoardView()
         setupTableView()
     }
