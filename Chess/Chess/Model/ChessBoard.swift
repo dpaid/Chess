@@ -94,7 +94,7 @@ extension ChessBoard {
                           visitedStack: inout Stack<ChessSquare>,
                           start: ChessSquare,
                           end: ChessSquare,
-                          cutoff: Int? = nil) -> [Stack<ChessSquare>] {
+                          cutoff: Int? = 3) -> [Stack<ChessSquare>] {
         var solutions: [Stack<ChessSquare>] = []
         
         visitedStack.push(start)
