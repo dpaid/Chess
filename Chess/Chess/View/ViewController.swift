@@ -11,7 +11,11 @@ import UIKit
 class ViewController: UIViewController {
     private let chessBoardView = ChessBoardView()
     private let tableView = UITableView()
-    private var paths: [Stack<ChessSquare>] = []
+    private var paths: [Stack<ChessSquare>] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -55,6 +59,7 @@ class ViewController: UIViewController {
     
     private func setupTableView() {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: String(describing: UITableViewCell.self))
+        tableView.tableHeaderView = UIActivityIndicatorView(style: .large)
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
@@ -68,7 +73,6 @@ class ViewController: UIViewController {
 extension ViewController: ChessBoardViewDelegate {
     func didFind(paths: [Stack<ChessSquare>]) {
         self.paths = paths
-        tableView.reloadData()
         
         if paths.isEmpty {
             presentAlert(title: "No path found", message: "If you're lost, try increasing the cutoff for DFS", actions: [UIAlertAction(title: "OK", style: .cancel, handler: nil)])
@@ -77,7 +81,6 @@ extension ViewController: ChessBoardViewDelegate {
     
     func clearPaths() {
         self.paths = []
-        tableView.reloadData()
     }
 }
 
