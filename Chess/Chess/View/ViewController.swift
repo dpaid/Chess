@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     }
     private lazy var spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
-        spinner.color = .darkGray
+        spinner.color = .lightGray
         spinner.hidesWhenStopped = true
         return spinner
     }()
