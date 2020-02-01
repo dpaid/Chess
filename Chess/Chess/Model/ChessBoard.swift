@@ -56,11 +56,11 @@ struct ChessBoard {
             break
         case .complete(let start, let end):
             self.delegate?.didStartFindingPaths()
-            startFindingPaths(start: start, end: end)
+            findPaths(start: start, end: end)
         }
     }
     
-    private mutating func startFindingPaths(start: ChessSquare, end: ChessSquare) {
+    private mutating func findPaths(start: ChessSquare, end: ChessSquare) {
         var task: DispatchWorkItem?
         task = DispatchWorkItem { [self] in
             var knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)

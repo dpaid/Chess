@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ChessBoardState {
+enum ChessBoardState: Equatable {
     case initial
     case incomplete(start: ChessSquare)
     case complete(start: ChessSquare, end: ChessSquare)

@@ -11,7 +11,7 @@ import XCTest
 
 class ChessTests: XCTestCase {
 
-    func testValidPositions() {
+    func testChessBoardValidPositions() {
         // Given
         let chessBoard = ChessBoard(size: 8)
         let piece = Knight(color: .black, initialPosition: ChessSquare(x: 0, y: 1), position: ChessSquare(x: 0, y: 1))
@@ -43,5 +43,52 @@ class ChessTests: XCTestCase {
         XCTAssert(validPositions2.contains(ChessSquare(x: 1, y: 4)))
     }
 
+    func testChessPieceMoveToPosition() {
+        // Given
+        var piece = Knight(color: .black, initialPosition: ChessSquare(x: 0, y: 1), position: ChessSquare(x: 0, y: 1))
+        
+        // When
+        let endSquare = ChessSquare(x: 2, y: 2)
+        piece.move(to: endSquare)
+        
+        // Then
+        XCTAssertEqual(piece.position, endSquare)
+    }
+    
+    func testChessBoardStateMoveToNextState() {
+        // Given
+        var chessboardState = ChessBoardState.initial
+        let startSquare1 = ChessSquare(x: 0, y: 1)
+        
+        // When
+        _ = chessboardState.moveToNextState(square: startSquare1)
+        
+        // Then
+        XCTAssertEqual(chessboardState, ChessBoardState.incomplete(start: startSquare1))
+        
+        // Given
+        let startSquare2 = ChessSquare(x: 0, y: 1)
+        var chessboardState2 = ChessBoardState.incomplete(start: startSquare2)
+        let endSquare2 = ChessSquare(x: 2, y: 2)
+        
+        
+        // When
+        _ = chessboardState2.moveToNextState(square: endSquare2)
+        
+        // Then
+        XCTAssertEqual(chessboardState2, ChessBoardState.complete(start: startSquare2, end: endSquare2))
+        
+        // Given
+        let startSquare3 = ChessSquare(x: 0, y: 2)
+        let endSquare3 = ChessSquare(x: 2, y: 2)
+        let square = ChessSquare(x: 2, y: 3)
+        var chessboardState3 = ChessBoardState.complete(start: startSquare3, end: endSquare3)
+        
+        // When
+        _ = chessboardState3.moveToNextState(square: square)
+        
+        // Then
+        XCTAssertEqual(chessboardState3, ChessBoardState.initial)
+    }
 }
 
