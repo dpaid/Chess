@@ -11,6 +11,7 @@ import UIKit
 
 protocol ChessBoardDelegate: class {
     func didFind(paths: [Stack<ChessSquare>])
+    func clearPaths()
 }
 
 struct ChessBoard {
@@ -45,14 +46,16 @@ struct ChessBoard {
     mutating func moveToNextState(square: ChessSquare) {
         let newState = state.moveToNextState(square: square)
         switch newState {
+        case .initial:
+            delegate?.clearPaths()
+        case .incomplete:
+            break
         case .complete(let start, let end):
             var knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)
             var visitedStack = Stack<ChessSquare>()
             let solutions = depthFirstSearch(piece: &knight, visitedStack: &visitedStack, start: start, end: end)
             let sortedSolutions = solutions.sorted { $0.description.count < $1.description.count }
             delegate?.didFind(paths: sortedSolutions)
-        case .initial, .incomplete:
-            break
         }
     }
     

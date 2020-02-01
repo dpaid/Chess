@@ -28,17 +28,17 @@ class ViewController: UIViewController {
     }
     
     @objc func didPressResize(_ sender: UIBarButtonItem) {
-        let sizesAlertController = UIAlertController(title: "Pick board size", message: nil, preferredStyle: .alert)
+        var actions: [UIAlertAction] = []
         for size in ChessBoard.validSizes {
-            let action = UIAlertAction(title: "\(size) x \(size)", style: .default) { (action) in
-                self.chessBoardView.resize(size: size)
+            let action = UIAlertAction(title: "\(size) x \(size)", style: .default) { [weak self] (action) in
+                self?.paths = []
+                self?.chessBoardView.resize(size: size)
             }
-            sizesAlertController.addAction(action)
+            actions.append(action)
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        sizesAlertController.addAction(cancelAction)
-        
-        present(sizesAlertController, animated: true, completion: nil)
+        actions.append(cancelAction)
+        presentAlert(title: "Pick board size", message: nil, actions: actions)
     }
 
     
@@ -69,6 +69,15 @@ extension ViewController: ChessBoardViewDelegate {
     func didFind(paths: [Stack<ChessSquare>]) {
         self.paths = paths
         tableView.reloadData()
+        
+        if paths.isEmpty {
+            presentAlert(title: "No path found", message: "If you're lost, try increasing the cutoff for DFS", actions: [UIAlertAction(title: "OK", style: .cancel, handler: nil)])
+        }
+    }
+    
+    func clearPaths() {
+        self.paths = []
+        tableView.reloadData()
     }
 }
 
@@ -83,6 +92,12 @@ extension ViewController: UITableViewDataSource {
         cell.textLabel?.text = "\(indexPath.row).   " + paths[indexPath.row].description
         return cell
     }
-    
-    
+}
+
+extension ViewController {
+    func presentAlert(title: String?, message: String?, actions: [UIAlertAction]) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        actions.forEach { alertController.addAction( $0 ) }
+        present(alertController, animated: true, completion: nil)
+    }
 }

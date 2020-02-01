@@ -10,6 +10,7 @@ import UIKit
 
 protocol ChessBoardViewDelegate: class {
     func didFind(paths: [Stack<ChessSquare>])
+    func clearPaths()
 }
 
 class ChessBoardView: UIView {
@@ -50,11 +51,9 @@ class ChessBoardView: UIView {
     func resize(size: Int) {
         self.chessBoard = ChessBoard(size: size)
         self.chessBoard.delegate = self
-        delegate?.didFind(paths: [])
+        delegate?.clearPaths()
         setNeedsDisplay()
     }
-    
-    
 }
 
 extension ChessBoardView {
@@ -109,5 +108,9 @@ extension ChessBoardView {
 extension ChessBoardView: ChessBoardDelegate {
     func didFind(paths: [Stack<ChessSquare>]) {
         delegate?.didFind(paths: paths)
+    }
+    
+    func clearPaths() {
+        delegate?.clearPaths()
     }
 }
