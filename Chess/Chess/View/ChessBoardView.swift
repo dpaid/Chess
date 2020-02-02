@@ -11,7 +11,7 @@ import UIKit
 protocol ChessBoardViewDelegate: class {
     func didStartFindingPaths()
     func didFind(paths: [Stack<ChessSquare>])
-    func shouldClearPaths()
+    func clearPaths()
 }
 
 class ChessBoardView: UIView {
@@ -22,8 +22,8 @@ class ChessBoardView: UIView {
     }
     weak var delegate: ChessBoardViewDelegate?
     
-    init() {
-        self.chessBoard = ChessBoard(size: 8)
+    init(chessBoard: ChessBoard = ChessBoard(size: 8)) {
+        self.chessBoard = chessBoard
         super.init(frame: .zero)
         backgroundColor = UIColor.systemBackground
     }
@@ -43,11 +43,12 @@ class ChessBoardView: UIView {
         let point = touch.location(in: self)
     
         guard let square = chessBoard.translate(point: point, in: self) else { return }
-        delegate?.shouldClearPaths()
         
         let newState = chessBoard.moveToNextState(square: square)
         switch newState {
-        case .initial, .incomplete:
+        case .initial:
+            delegate?.clearPaths()
+        case .incomplete:
             break
         case .complete(let start, let end):
             delegate?.didStartFindingPaths()
@@ -63,7 +64,7 @@ class ChessBoardView: UIView {
     func resize(size: Int) {
         chessBoard.cancelFindPathsTask()
         chessBoard = ChessBoard(size: size)
-        delegate?.shouldClearPaths()
+        delegate?.clearPaths()
         setNeedsDisplay()
     }
 }

@@ -94,7 +94,7 @@ extension ViewController: ChessBoardViewDelegate {
         }
     }
     
-    func shouldClearPaths() {
+    func clearPaths() {
         spinner.stopAnimating()
         self.paths = []
     }

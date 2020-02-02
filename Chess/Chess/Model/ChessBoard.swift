@@ -44,10 +44,6 @@ struct ChessBoard {
         return state.moveToNextState(square: square)
     }
     
-    func cancelFindPathsTask() {
-        findPathsTask?.cancel()
-    }
-    
     mutating func findPaths(piece: ChessPiece,
                             start: ChessSquare,
                             end: ChessSquare,
@@ -67,6 +63,10 @@ struct ChessBoard {
         }
         self.findPathsTask = task
         DispatchQueue.global(qos: .background).async(execute: self.findPathsTask!)
+    }
+    
+    func cancelFindPathsTask() {
+        findPathsTask?.cancel()
     }
     
     func color(`for` square: ChessSquare) -> UIColor {
