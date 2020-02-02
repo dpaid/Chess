@@ -27,20 +27,19 @@ struct ChessBoard {
     }
     
     func translate(point: CGPoint, `in` view: ChessBoardView) -> ChessSquare? {
-        guard point.x > ChessBoardView.margin,
+        guard point.x > view.margin,
             point.x < view.bounds.width,
             point.y > 0 ,
-            point.y < view.bounds.height - ChessBoardView.margin else { return nil }
+            point.y < view.bounds.height - view.margin else { return nil }
         
-        let squareSize = (view.bounds.width - ChessBoardView.margin) / sqrt(CGFloat(squares.count))
-        let x = Int((point.x - ChessBoardView.margin) / squareSize)
-        let y = Int((view.bounds.height - ChessBoardView.margin - point.y) / squareSize)
+        let squareSize = (view.bounds.width - view.margin) / sqrt(CGFloat(squares.count))
+        let x = Int((point.x - view.margin) / squareSize)
+        let y = Int((view.bounds.height - view.margin - point.y) / squareSize)
         
         return ChessSquare(x: x, y: y)
     }
     
     mutating func moveToNextState(square: ChessSquare) -> ChessBoardState {
-        cancelFindPathsTask()
         return state.moveToNextState(square: square)
     }
     
@@ -69,6 +68,10 @@ struct ChessBoard {
         findPathsTask?.cancel()
     }
     
+    func squareSize(`for` view: ChessBoardView) -> CGFloat {
+        return (view.bounds.width - view.margin) / sqrt(CGFloat(squares.count))
+    }
+    
     func color(`for` square: ChessSquare) -> UIColor {
         switch state {
         case .initial:
@@ -86,7 +89,7 @@ extension ChessBoard {
                                   visitedStack: inout Stack<ChessSquare>,
                                   start: ChessSquare,
                                   end: ChessSquare,
-                                  cutoff: Int? = 3) -> [Stack<ChessSquare>] {
+                                  cutoff: Int? = 7) -> [Stack<ChessSquare>] {
         var paths: [Stack<ChessSquare>] = []
         
         visitedStack.push(start)

@@ -15,11 +15,8 @@ protocol ChessBoardViewDelegate: class {
 }
 
 class ChessBoardView: UIView {
-    static let margin: CGFloat = 30
+    let margin: CGFloat = 30
     private var chessBoard: ChessBoard
-    private var squareSize: CGFloat {
-        return (bounds.width - ChessBoardView.margin) / sqrt(CGFloat(chessBoard.squares.count))
-    }
     weak var delegate: ChessBoardViewDelegate?
     
     init(chessBoard: ChessBoard = ChessBoard(size: 8)) {
@@ -48,6 +45,7 @@ class ChessBoardView: UIView {
         switch newState {
         case .initial:
             delegate?.clearPaths()
+            chessBoard.cancelFindPathsTask()
         case .incomplete:
             break
         case .complete(let start, let end):
@@ -62,18 +60,19 @@ class ChessBoardView: UIView {
     }
     
     func resize(size: Int) {
+        delegate?.clearPaths()
         chessBoard.cancelFindPathsTask()
         chessBoard = ChessBoard(size: size)
-        delegate?.clearPaths()
         setNeedsDisplay()
     }
 }
 
 extension ChessBoardView {
     private func drawSquares() {
+        let squareSize = chessBoard.squareSize(for: self)
         chessBoard.squares.forEach { square in
             let color = chessBoard.color(for: square)
-            let path = UIBezierPath(rect: CGRect(x: (CGFloat(square.x) * squareSize + ChessBoardView.margin),
+            let path = UIBezierPath(rect: CGRect(x: (CGFloat(square.x) * squareSize + margin),
                                                  y: CGFloat(chessBoard.size - 1 - square.y) * squareSize,
                                                  width: squareSize,
                                                  height: squareSize))
@@ -84,14 +83,15 @@ extension ChessBoardView {
     }
     
     private func drawLetters() {
+        let squareSize = chessBoard.squareSize(for: self)
         let letters = ChessBoard.allLetters.prefix(chessBoard.size)
         let attributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15),
                           NSAttributedString.Key.foregroundColor : UIColor.label]
         let charSize = 15
         
         for (index, letter) in letters.enumerated() {
-            letter.draw(with: CGRect(x: ((CGFloat(index) * squareSize) + (squareSize / 2) + (ChessBoardView.margin - CGFloat(charSize) / 4)),
-                                     y: squareSize * CGFloat(chessBoard.size) + ChessBoardView.margin,
+            letter.draw(with: CGRect(x: ((CGFloat(index) * squareSize) + (squareSize / 2) + (margin - CGFloat(charSize) / 4)),
+                                     y: squareSize * CGFloat(chessBoard.size) + margin,
                                      width: CGFloat(charSize),
                                      height: CGFloat(charSize)),
                         options: .usesDeviceMetrics,
@@ -101,13 +101,14 @@ extension ChessBoardView {
     }
     
     private func drawNumbers() {
+        let squareSize = chessBoard.squareSize(for: self)
         let attributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15),
                           NSAttributedString.Key.foregroundColor : UIColor.label]
         let numberSize = 15
         
         for number in 1...chessBoard.size {
-            "\(number)".draw(with: CGRect(x: ChessBoardView.margin / 4,
-                                          y: (CGFloat(chessBoard.size - number) * squareSize + (squareSize / 2) + ChessBoardView.margin / 4),
+            "\(number)".draw(with: CGRect(x: margin / 4,
+                                          y: (CGFloat(chessBoard.size - number) * squareSize + (squareSize / 2) + margin / 4),
                                           width: CGFloat(numberSize),
                                           height: CGFloat(numberSize)),
                              options: .usesDeviceMetrics,

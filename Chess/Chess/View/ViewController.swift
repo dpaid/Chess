@@ -45,7 +45,6 @@ class ViewController: UIViewController {
         var actions: [UIAlertAction] = []
         for size in ChessBoard.validSizes {
             let action = UIAlertAction(title: "\(size) x \(size)", style: .default) { [weak self] (action) in
-                self?.paths = []
                 self?.chessBoardView.resize(size: size)
             }
             actions.append(action)
