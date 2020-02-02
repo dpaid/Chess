@@ -109,12 +109,12 @@ extension ChessBoard {
         return paths
     }
     
-    private func validPositions(piece: ChessPiece) -> Set<ChessSquare> {
-        var validPositions: Set<ChessSquare> = []
+    private func validPositions(piece: ChessPiece) -> [ChessSquare] {
+        var validPositions: [ChessSquare] = []
         for position in piece.possiblePositions {
             guard position.x >= 0 && position.x < size,
                 position.y >= 0 && position.y < size else { continue }
-            validPositions.insert(position)
+            validPositions.append(position)
         }
         return validPositions
     }
