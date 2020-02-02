@@ -9,19 +9,13 @@
 import Foundation
 import UIKit
 
-protocol ChessBoardDelegate: class {
-    func didStartFindingPaths()
-    func didFind(paths: [Stack<ChessSquare>])
-    func shouldClearPaths()
-}
-
 struct ChessBoard {
     static let validSizes = 6...16
+    static let allLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W"]
     private var state: ChessBoardState = .initial
     private var findPathsTask: DispatchWorkItem?
     let size: Int
     var squares: [ChessSquare] = []
-    weak var delegate: ChessBoardDelegate?
     
     init(size: Int) {
         self.size = size
@@ -45,31 +39,29 @@ struct ChessBoard {
         return ChessSquare(x: x, y: y)
     }
     
-    mutating func moveToNextState(square: ChessSquare) {
-        delegate?.shouldClearPaths()
-        findPathsTask?.cancel()
-        let newState = state.moveToNextState(square: square)
-        switch newState {
-        case .initial:
-            delegate?.shouldClearPaths()
-        case .incomplete:
-            break
-        case .complete(let start, let end):
-            self.delegate?.didStartFindingPaths()
-            findPaths(start: start, end: end)
-        }
+    mutating func moveToNextState(square: ChessSquare) -> ChessBoardState {
+        cancelFindPathsTask()
+        return state.moveToNextState(square: square)
     }
     
-    private mutating func findPaths(start: ChessSquare, end: ChessSquare) {
+    func cancelFindPathsTask() {
+        findPathsTask?.cancel()
+    }
+    
+    mutating func findPaths(piece: ChessPiece,
+                            start: ChessSquare,
+                            end: ChessSquare,
+                            completion: @escaping ([Stack<ChessSquare>]) -> Void) {
         var task: DispatchWorkItem?
         task = DispatchWorkItem { [self] in
-            var knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)
+            var chessPiece: ChessPiece = piece
+            chessPiece.position = start
             var visitedStack = Stack<ChessSquare>()
-            let solutions = self.depthFirstSearch(piece: &knight, visitedStack: &visitedStack, start: start, end: end)
+            let solutions = self.depthFirstSearch(piece: &chessPiece, visitedStack: &visitedStack, start: start, end: end)
             let sortedSolutions = solutions.sorted { $0.description.count < $1.description.count }
             if !(task?.isCancelled ?? false) {
                 DispatchQueue.main.async {
-                    self.delegate?.didFind(paths: sortedSolutions)
+                    completion(sortedSolutions)
                 }
             }
         }
@@ -114,7 +106,7 @@ extension ChessBoard {
         return solutions
     }
     
-    func validPositions(piece: ChessPiece) -> Set<ChessSquare> {
+    private func validPositions(piece: ChessPiece) -> Set<ChessSquare> {
         var validPositions: Set<ChessSquare> = []
         for position in piece.possiblePositions {
             guard position.x >= 0 && position.x < size,

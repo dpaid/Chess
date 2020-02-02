@@ -15,7 +15,6 @@ struct ChessSquare: Equatable, Hashable {
 
 extension ChessSquare: CustomStringConvertible {
     var description: String {
-        let allLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W"]
-        return "\(allLetters[x])\(y+1)"
+        return "\(ChessBoard.allLetters[x])\(y+1)"
     }
 }

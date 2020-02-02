@@ -26,7 +26,6 @@ class ChessBoardView: UIView {
         self.chessBoard = ChessBoard(size: 8)
         super.init(frame: .zero)
         backgroundColor = UIColor.systemBackground
-        self.chessBoard.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -42,15 +41,28 @@ class ChessBoardView: UIView {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let point = touch.location(in: self)
-        
+    
         guard let square = chessBoard.translate(point: point, in: self) else { return }
-        chessBoard.moveToNextState(square: square)
+        delegate?.shouldClearPaths()
+        
+        let newState = chessBoard.moveToNextState(square: square)
+        switch newState {
+        case .initial, .incomplete:
+            break
+        case .complete(let start, let end):
+            delegate?.didStartFindingPaths()
+            let knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)
+            chessBoard.findPaths(piece: knight, start: start, end: end) { [weak self] solutions in
+                self?.delegate?.didFind(paths: solutions)
+            }
+        }
+        
         setNeedsDisplay()
     }
     
     func resize(size: Int) {
-        self.chessBoard = ChessBoard(size: size)
-        self.chessBoard.delegate = self
+        chessBoard.cancelFindPathsTask()
+        chessBoard = ChessBoard(size: size)
         delegate?.shouldClearPaths()
         setNeedsDisplay()
     }
@@ -71,8 +83,7 @@ extension ChessBoardView {
     }
     
     private func drawLetters() {
-        let allLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W"]
-        let letters = allLetters.prefix(chessBoard.size)
+        let letters = ChessBoard.allLetters.prefix(chessBoard.size)
         let attributes = [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 15),
                           NSAttributedString.Key.foregroundColor : UIColor.label]
         let charSize = 15
@@ -102,19 +113,5 @@ extension ChessBoardView {
                              attributes: attributes,
                              context: nil)
         }
-    }
-}
-
-extension ChessBoardView: ChessBoardDelegate {
-    func didStartFindingPaths() {
-        delegate?.didStartFindingPaths()
-    }
-    
-    func didFind(paths: [Stack<ChessSquare>]) {
-        delegate?.didFind(paths: paths)
-    }
-    
-    func shouldClearPaths() {
-        delegate?.shouldClearPaths()
     }
 }
