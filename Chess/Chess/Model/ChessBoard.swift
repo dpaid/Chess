@@ -57,11 +57,11 @@ struct ChessBoard {
             var chessPiece: ChessPiece = piece
             chessPiece.position = start
             var visitedStack = Stack<ChessSquare>()
-            let solutions = self.depthFirstSearch(piece: &chessPiece, visitedStack: &visitedStack, start: start, end: end)
-            let sortedSolutions = solutions.sorted { $0.description.count < $1.description.count }
+            let paths = self.depthFirstSearch(piece: &chessPiece, visitedStack: &visitedStack, start: start, end: end)
+            let sortedPaths = paths.sorted { $0.description.count < $1.description.count }
             if !(task?.isCancelled ?? false) {
                 DispatchQueue.main.async {
-                    completion(sortedSolutions)
+                    completion(sortedPaths)
                 }
             }
         }
@@ -83,27 +83,27 @@ struct ChessBoard {
 
 extension ChessBoard {
     private func depthFirstSearch(piece: inout ChessPiece,
-                          visitedStack: inout Stack<ChessSquare>,
-                          start: ChessSquare,
-                          end: ChessSquare,
-                          cutoff: Int? = 3) -> [Stack<ChessSquare>] {
-        var solutions: [Stack<ChessSquare>] = []
+                                  visitedStack: inout Stack<ChessSquare>,
+                                  start: ChessSquare,
+                                  end: ChessSquare,
+                                  cutoff: Int? = 3) -> [Stack<ChessSquare>] {
+        var paths: [Stack<ChessSquare>] = []
         
         visitedStack.push(start)
         for position in validPositions(piece: piece) {
-            guard cutoff == nil || cutoff! > 0 else { return solutions }
+            guard cutoff == nil || cutoff! > 0 else { return paths }
             
             guard !visitedStack.contains(element: position) else { continue }
             piece.move(to: position)
             if position == end {
                 visitedStack.push(position)
-                solutions.append(visitedStack)
+                paths.append(visitedStack)
             } else {
-                solutions += depthFirstSearch(piece: &piece, visitedStack: &visitedStack, start: position, end: end, cutoff: cutoff == nil ? cutoff : cutoff! - 1)
+                paths += depthFirstSearch(piece: &piece, visitedStack: &visitedStack, start: position, end: end, cutoff: cutoff == nil ? cutoff : cutoff! - 1)
             }
             _ = visitedStack.pop()
         }
-        return solutions
+        return paths
     }
     
     private func validPositions(piece: ChessPiece) -> Set<ChessSquare> {
