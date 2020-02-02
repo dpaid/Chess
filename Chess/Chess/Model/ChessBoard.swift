@@ -54,7 +54,7 @@ struct ChessBoard {
             var visitedStack = Stack<ChessSquare>()
             let paths = self.depthFirstSearch(piece: &chessPiece, visitedStack: &visitedStack, start: start, end: end)
             let sortedPaths = paths.sorted { $0.description.count < $1.description.count }
-            if !(task?.isCancelled ?? false) {
+            if !(task?.isCancelled ?? true) {
                 DispatchQueue.main.async {
                     completion(sortedPaths)
                 }
