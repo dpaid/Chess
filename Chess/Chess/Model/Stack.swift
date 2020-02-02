@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Stack<T: Hashable & CustomStringConvertible> {
+struct Stack<T: Hashable & CustomStringConvertible>: Equatable {
     private var array: [T] = []
     private var set: Set<T> = []
     

@@ -10,42 +10,10 @@ import XCTest
 @testable import Chess
 
 class ChessTests: XCTestCase {
-
-    func testChessBoardValidPositions() {
-        // Given
-        let chessBoard = ChessBoard(size: 8)
-        let piece = Knight(color: .black, initialPosition: ChessSquare(x: 0, y: 1), position: ChessSquare(x: 0, y: 1))
-        
-        // When
-        let validPositions = chessBoard.validPositions(piece: piece)
-        
-        // Then
-        XCTAssertEqual(chessBoard.validPositions(piece: piece).count, 3)
-        XCTAssert(validPositions.contains(ChessSquare(x: 2, y: 0)))
-        XCTAssert(validPositions.contains(ChessSquare(x: 2, y: 2)))
-        XCTAssert(validPositions.contains(ChessSquare(x: 1, y: 3)))
-        
-        // Given
-        let piece2 = Knight(color: .black, initialPosition: ChessSquare(x: 0, y: 1), position: ChessSquare(x: 3, y: 3))
-           
-        // When
-        let validPositions2 = chessBoard.validPositions(piece: piece2)
-           
-        // Then
-        XCTAssertEqual(chessBoard.validPositions(piece: piece2).count, 8)
-        XCTAssert(validPositions2.contains(ChessSquare(x: 4, y: 5)))
-        XCTAssert(validPositions2.contains(ChessSquare(x: 4, y: 1)))
-        XCTAssert(validPositions2.contains(ChessSquare(x: 2, y: 5)))
-        XCTAssert(validPositions2.contains(ChessSquare(x: 2, y: 1)))
-        XCTAssert(validPositions2.contains(ChessSquare(x: 5, y: 2)))
-        XCTAssert(validPositions2.contains(ChessSquare(x: 5, y: 4)))
-        XCTAssert(validPositions2.contains(ChessSquare(x: 1, y: 2)))
-        XCTAssert(validPositions2.contains(ChessSquare(x: 1, y: 4)))
-    }
-
+    
     func testChessPieceMoveToPosition() {
         // Given
-        var piece = Knight(color: .black, initialPosition: ChessSquare(x: 0, y: 1), position: ChessSquare(x: 0, y: 1))
+        var piece = Knight(color: .black, initialPosition: ChessSquare(x: 1, y: 0), position: ChessSquare(x: 0, y: 1))
         
         // When
         let endSquare = ChessSquare(x: 2, y: 2)
@@ -55,40 +23,99 @@ class ChessTests: XCTestCase {
         XCTAssertEqual(piece.position, endSquare)
     }
     
-    func testChessBoardStateMoveToNextState() {
+    func testChessBoardStateMoveToNextStateFromInitial() {
         // Given
         var chessboardState = ChessBoardState.initial
-        let startSquare1 = ChessSquare(x: 0, y: 1)
+        let startSquare1 = ChessSquare(x: 1, y: 0)
         
         // When
         _ = chessboardState.moveToNextState(square: startSquare1)
         
         // Then
         XCTAssertEqual(chessboardState, ChessBoardState.incomplete(start: startSquare1))
-        
+    }
+    
+    func testChessBoardStateMoveToNextStateFromIncomplete() {
         // Given
-        let startSquare2 = ChessSquare(x: 0, y: 1)
-        var chessboardState2 = ChessBoardState.incomplete(start: startSquare2)
-        let endSquare2 = ChessSquare(x: 2, y: 2)
-        
+        let startSquare = ChessSquare(x: 1, y: 0)
+        var chessboardState = ChessBoardState.incomplete(start: startSquare)
+        let endSquare = ChessSquare(x: 2, y: 2)
         
         // When
-        _ = chessboardState2.moveToNextState(square: endSquare2)
+        _ = chessboardState.moveToNextState(square: endSquare)
         
         // Then
-        XCTAssertEqual(chessboardState2, ChessBoardState.complete(start: startSquare2, end: endSquare2))
-        
+        XCTAssertEqual(chessboardState, ChessBoardState.complete(start: startSquare, end: endSquare))
+    }
+    
+    func testChessBoardStateMoveToNextStateFromComplete() {
         // Given
-        let startSquare3 = ChessSquare(x: 0, y: 2)
-        let endSquare3 = ChessSquare(x: 2, y: 2)
+        let startSquare = ChessSquare(x: 0, y: 2)
+        let endSquare = ChessSquare(x: 2, y: 2)
         let square = ChessSquare(x: 2, y: 3)
-        var chessboardState3 = ChessBoardState.complete(start: startSquare3, end: endSquare3)
+        var chessboardState = ChessBoardState.complete(start: startSquare, end: endSquare)
         
         // When
-        _ = chessboardState3.moveToNextState(square: square)
+        _ = chessboardState.moveToNextState(square: square)
         
         // Then
-        XCTAssertEqual(chessboardState3, ChessBoardState.initial)
+        XCTAssertEqual(chessboardState, ChessBoardState.initial)
+
+    }
+    
+    func testFindPathsEmptyResults() {
+        // Given
+        var chessBoard = ChessBoard(size: 8)
+        let start = ChessSquare(x: 0, y: 0)
+        let end = ChessSquare(x: 7, y: 7)
+        let knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)
+        
+        let expectation = self.expectation(description: "Solving")
+        var paths: [Stack<ChessSquare>]?
+        
+        // When
+        chessBoard.findPaths(piece: knight, start: start, end: end) {
+            paths = $0
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5)
+        
+        // Then
+        XCTAssertEqual(paths, [])
+    }
+    
+    func testFindPathsWithResults() {
+        // Given
+        var chessBoard = ChessBoard(size: 8)
+        let start = ChessSquare(x: 0, y: 0)
+        let end = ChessSquare(x: 3, y: 3)
+        let knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)
+        
+        let expectation = self.expectation(description: "Solving")
+        var paths: [Stack<ChessSquare>]?
+
+        // When
+        chessBoard.findPaths(piece: knight, start: start, end: end) {
+            paths = $0
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5)
+
+        // Then
+        XCTAssertEqual(paths?.count, 2)
+
+        var stack1 = Stack<ChessSquare>()
+        stack1.push(start)
+        stack1.push(ChessSquare(x: 2, y: 1))
+        stack1.push(ChessSquare(x: 3, y: 3))
+
+        var stack2 = Stack<ChessSquare>()
+        stack2.push(start)
+        stack2.push(ChessSquare(x: 1, y: 2))
+        stack2.push(ChessSquare(x: 3, y: 3))
+
+        XCTAssert(paths?.contains(stack1) ?? false)
+        XCTAssert(paths?.contains(stack2) ?? false)
     }
 }
 
