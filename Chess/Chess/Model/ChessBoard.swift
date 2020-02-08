@@ -69,10 +69,7 @@ struct ChessBoard {
     }
     
     func squareSize(`for` view: ChessBoardView) -> CGFloat {
-        let smallDimension = view.bounds.width < view.bounds.height ?
-            (view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right) :
-            (view.bounds.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom)
-        return (smallDimension - view.margin) / sqrt(CGFloat(squares.count))
+        return (view.bounds.width - view.margin) / sqrt(CGFloat(squares.count))
     }
     
     func color(`for` square: ChessSquare) -> UIColor {
