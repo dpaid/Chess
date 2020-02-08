@@ -51,7 +51,7 @@ class ChessBoardView: UIView {
             break
         case .complete(let start, let end):
             delegate?.didStartFindingPaths()
-            let knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), image: UIImage(named: "knightWhite")!, position: start)
+            let knight: ChessPiece = Knight(color: .white, initialPosition: start)
             chessBoard.findPaths(piece: knight, start: start, end: end) { [weak self] solutions in
                 self?.delegate?.didFind(paths: solutions)
             }

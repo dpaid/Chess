@@ -16,14 +16,24 @@ struct ChessBoard {
     private var findPathsTask: DispatchWorkItem?
     let size: Int
     var squares: [ChessSquare] = []
-    var pieces: [ChessPiece] = [Knight(color: .white,
-                                       initialPosition: ChessSquare(x: 2, y: 0),
-                                       image: UIImage(named: "knightWhite")!,
-                                       position: ChessSquare(x: 2, y: 0)),
-                                Knight(color: .white,
-                                       initialPosition: ChessSquare(x: 5, y: 0),
-                                       image: UIImage(named: "knightWhite")!,
-                                       position: ChessSquare(x: 5, y: 0))
+    var pieces: [ChessPiece] = [Pawn(color: .white, initialPosition: ChessSquare(x: 0, y: 1)),
+                               Pawn(color: .white, initialPosition: ChessSquare(x: 1, y: 1)),
+                               Pawn(color: .white, initialPosition: ChessSquare(x: 2, y: 1)),
+                               Pawn(color: .white, initialPosition: ChessSquare(x: 3, y: 1)),
+                               Pawn(color: .white, initialPosition: ChessSquare(x: 4, y: 1)),
+                               Pawn(color: .white, initialPosition: ChessSquare(x: 5, y: 1)),
+                               Pawn(color: .white, initialPosition: ChessSquare(x: 6, y: 1)),
+                               Pawn(color: .white, initialPosition: ChessSquare(x: 7, y: 1)),
+                               Rook(color: .white, initialPosition: ChessSquare(x: 0, y: 0)),
+                               Rook(color: .white, initialPosition: ChessSquare(x: 7, y: 0)),
+                               Bishop(color: .white, initialPosition: ChessSquare(x: 1, y: 0)),
+                               Bishop(color: .white, initialPosition: ChessSquare(x: 6, y: 0)),
+                               Knight(color: .white,
+                                       initialPosition: ChessSquare(x: 2, y: 0)),
+                               Knight(color: .white,
+                                       initialPosition: ChessSquare(x: 5, y: 0)),
+                               Queen(color: .white, initialPosition: ChessSquare(x: 3, y: 0)),
+                               King(color: .white, initialPosition: ChessSquare(x: 4, y: 0))
     ]
     
     init(size: Int) {
