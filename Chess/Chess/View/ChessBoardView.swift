@@ -31,6 +31,7 @@ class ChessBoardView: UIView {
     
     override func draw(_ rect: CGRect) {
         drawSquares()
+        drawPieces()
         drawLetters()
         drawNumbers()
     }
@@ -50,7 +51,7 @@ class ChessBoardView: UIView {
             break
         case .complete(let start, let end):
             delegate?.didStartFindingPaths()
-            let knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), position: start)
+            let knight: ChessPiece = Knight(color: .white, initialPosition: ChessSquare(x: 1, y: 0), image: UIImage(named: "knightWhite")!, position: start)
             chessBoard.findPaths(piece: knight, start: start, end: end) { [weak self] solutions in
                 self?.delegate?.didFind(paths: solutions)
             }
@@ -79,6 +80,16 @@ extension ChessBoardView {
             
             color.setFill()
             path.fill()
+        }
+    }
+    
+    private func drawPieces() {
+        let squareSize = chessBoard.squareSize(for: self)
+        for piece in chessBoard.pieces {
+            piece.image.draw(in: CGRect(x: CGFloat(piece.position.x) * squareSize + margin,
+                                        y: squareSize * CGFloat(chessBoard.size - 1) - CGFloat(piece.position.y) * squareSize,
+                                        width: squareSize,
+                                        height: squareSize))
         }
     }
     

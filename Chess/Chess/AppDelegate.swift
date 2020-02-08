@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         guard #available(iOS 13.0, *) else {
             let viewController = ViewController()
             let navigationController = UINavigationController(rootViewController: viewController)
+            navigationController.navigationBar.prefersLargeTitles = true
             
             // Use a UIHostingController as window root view controller.
             window = UIWindow(frame: UIScreen.main.bounds)

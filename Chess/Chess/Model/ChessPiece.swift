@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 enum ChessColor {
     case white
@@ -18,12 +19,14 @@ protocol ChessPiece {
     var initialPosition: ChessSquare { get }
     var position: ChessSquare { get set }
     var possiblePositions: [ChessSquare] { get }
+    var image: UIImage { get }
     mutating func move(to position: ChessSquare)
 }
 
 struct Knight: ChessPiece {
     let color: ChessColor
     let initialPosition: ChessSquare
+    let image: UIImage
     var position: ChessSquare
     var possiblePositions: [ChessSquare] {
         get {

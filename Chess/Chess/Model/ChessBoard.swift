@@ -16,6 +16,15 @@ struct ChessBoard {
     private var findPathsTask: DispatchWorkItem?
     let size: Int
     var squares: [ChessSquare] = []
+    var pieces: [ChessPiece] = [Knight(color: .white,
+                                       initialPosition: ChessSquare(x: 2, y: 0),
+                                       image: UIImage(named: "knightWhite")!,
+                                       position: ChessSquare(x: 2, y: 0)),
+                                Knight(color: .white,
+                                       initialPosition: ChessSquare(x: 5, y: 0),
+                                       image: UIImage(named: "knightWhite")!,
+                                       position: ChessSquare(x: 5, y: 0))
+    ]
     
     init(size: Int) {
         self.size = size
