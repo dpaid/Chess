@@ -21,8 +21,10 @@ struct Stack<T: Hashable & CustomStringConvertible>: Equatable {
     }
     
     mutating func push(_ element: T) {
-        set.insert(element)
-        array.append(element)
+        if !set.contains(element) {
+            set.insert(element)
+            array.append(element)
+        }
     }
     
     mutating func pop() -> T? {

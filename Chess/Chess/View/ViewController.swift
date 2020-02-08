@@ -22,6 +22,25 @@ class ViewController: UIViewController {
         spinner.hidesWhenStopped = true
         return spinner
     }()
+    private var chessBoardWidth: NSLayoutConstraint?
+    private var chessBoardHeight: NSLayoutConstraint?
+    private var tableViewWidth: NSLayoutConstraint?
+    private var tableViewHeight: NSLayoutConstraint?
+    
+    private var smallDimension: CGFloat {
+        get {
+            return view.bounds.width < view.bounds.height ?
+                (view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right) :
+                (view.bounds.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom)
+        }
+    }
+    private var largeDimension: CGFloat {
+        get {
+            return view.bounds.width > view.bounds.height ?
+                (view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right) :
+                (view.bounds.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom)
+        }
+    }
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -60,10 +79,17 @@ class ViewController: UIViewController {
         chessBoardView.contentMode = .redraw
         chessBoardView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(chessBoardView)
-        chessBoardView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
-        chessBoardView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        
+        let smallDimension = view.bounds.width < view.bounds.height ?
+                (view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right) :
+                (view.bounds.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom)
+        
+        chessBoardView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         chessBoardView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        chessBoardView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        chessBoardWidth = chessBoardView.widthAnchor.constraint(equalToConstant: smallDimension)
+        chessBoardWidth?.isActive = true
+        chessBoardHeight = chessBoardView.heightAnchor.constraint(equalToConstant: smallDimension)
+        chessBoardHeight?.isActive = true
     }
     
     private func setupTableView() {
@@ -72,10 +98,31 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
-        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        tableView.topAnchor.constraint(equalTo: chessBoardView.bottomAnchor, constant: 8).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        tableViewWidth = tableView.widthAnchor.constraint(equalToConstant: smallDimension)
+        tableViewWidth?.isActive = true
+        tableViewHeight = tableView.heightAnchor.constraint(equalToConstant: largeDimension - smallDimension - chessBoardView.margin)
+        tableViewHeight?.isActive = true
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.view.setNeedsUpdateConstraints()
+    }
+    
+    override func updateViewConstraints() {
+        chessBoardWidth?.constant = smallDimension
+        chessBoardHeight?.constant = smallDimension
+        if view.bounds.height > view.bounds.width {
+            tableViewWidth?.constant = smallDimension
+            tableViewHeight?.constant = largeDimension - smallDimension - chessBoardView.margin
+        } else {
+            tableViewWidth?.constant = largeDimension - smallDimension - chessBoardView.margin
+            tableViewHeight?.constant = smallDimension
+        }
+        
+        super.updateViewConstraints()
     }
 }
 
