@@ -33,7 +33,25 @@ struct ChessBoard {
                                Knight(color: .white,
                                        initialPosition: ChessSquare(x: 5, y: 0)),
                                Queen(color: .white, initialPosition: ChessSquare(x: 3, y: 0)),
-                               King(color: .white, initialPosition: ChessSquare(x: 4, y: 0))
+                               King(color: .white, initialPosition: ChessSquare(x: 4, y: 0)),
+                               Pawn(color: .black, initialPosition: ChessSquare(x: 0, y: 6)),
+                               Pawn(color: .black, initialPosition: ChessSquare(x: 1, y: 6)),
+                               Pawn(color: .black, initialPosition: ChessSquare(x: 2, y: 6)),
+                               Pawn(color: .black, initialPosition: ChessSquare(x: 3, y: 6)),
+                               Pawn(color: .black, initialPosition: ChessSquare(x: 4, y: 6)),
+                               Pawn(color: .black, initialPosition: ChessSquare(x: 5, y: 6)),
+                               Pawn(color: .black, initialPosition: ChessSquare(x: 6, y: 6)),
+                               Pawn(color: .black, initialPosition: ChessSquare(x: 7, y: 6)),
+                               Rook(color: .black, initialPosition: ChessSquare(x: 0, y: 7)),
+                               Rook(color: .black, initialPosition: ChessSquare(x: 7, y: 7)),
+                               Bishop(color: .black, initialPosition: ChessSquare(x: 1, y: 7)),
+                               Bishop(color: .black, initialPosition: ChessSquare(x: 6, y: 7)),
+                               Knight(color: .black,
+                                       initialPosition: ChessSquare(x: 2, y: 7)),
+                               Knight(color: .black,
+                                       initialPosition: ChessSquare(x: 5, y: 7)),
+                               Queen(color: .black, initialPosition: ChessSquare(x: 3, y: 7)),
+                               King(color: .black, initialPosition: ChessSquare(x: 4, y: 7))
     ]
     
     init(size: Int) {
@@ -94,11 +112,11 @@ struct ChessBoard {
     func color(`for` square: ChessSquare) -> UIColor {
         switch state {
         case .initial:
-            return (square.x + square.y) % 2 == 0 ? UIColor.systemBackground : UIColor.label
+            return (square.x + square.y) % 2 == 0 ? UIColor.white : UIColor.lightGray
         case .incomplete(let start):
-            return square == start ? .green : ((square.x + square.y) % 2 == 0 ? UIColor.systemBackground : UIColor.label)
+            return square == start ? .green : ((square.x + square.y) % 2 == 0 ? UIColor.white : UIColor.lightGray)
         case .complete(let start, let end):
-            return square == start ? .green : (square == end) ? .red : ((square.x + square.y) % 2 == 0 ? UIColor.systemBackground : UIColor.label)
+            return square == start ? .green : (square == end) ? .red : ((square.x + square.y) % 2 == 0 ? UIColor.white : UIColor.lightGray)
         }
     }
 }

@@ -63,7 +63,7 @@ class ChessBoardView: UIView {
     func resize(size: Int) {
         delegate?.clearPaths()
         chessBoard.cancelFindPathsTask()
-        chessBoard = ChessBoard(size: size)
+        chessBoard = ChessBoard(size: 8)
         setNeedsDisplay()
     }
 }

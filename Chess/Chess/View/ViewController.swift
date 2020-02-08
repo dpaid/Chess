@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         
         title = "Say Cheesse"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Resize", style: .plain, target: self, action: #selector(didPressResize(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Restart", style: .plain, target: self, action: #selector(didPressResize(_:)))
         view.backgroundColor = UIColor.systemBackground
         setupBoardView()
         setupTableView()
@@ -61,16 +61,17 @@ class ViewController: UIViewController {
     }
     
     @objc func didPressResize(_ sender: UIBarButtonItem) {
-        var actions: [UIAlertAction] = []
-        for size in ChessBoard.validSizes {
-            let action = UIAlertAction(title: "\(size) x \(size)", style: .default) { [weak self] (action) in
-                self?.chessBoardView.resize(size: size)
-            }
-            actions.append(action)
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        actions.append(cancelAction)
-        presentAlert(title: "Pick board size", message: nil, actions: actions)
+        chessBoardView.resize(size: 8)
+//        var actions: [UIAlertAction] = []
+//        for size in ChessBoard.validSizes {
+//            let action = UIAlertAction(title: "\(size) x \(size)", style: .default) { [weak self] (action) in
+//                self?.chessBoardView.resize(size: size)
+//            }
+//            actions.append(action)
+//        }
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+//        actions.append(cancelAction)
+//        presentAlert(title: "Pick board size", message: nil, actions: actions)
     }
 
     
